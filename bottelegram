@@ -13,7 +13,7 @@ def handle_gerar(message):
     args = message.text.split()[1:]  # Obtém os argumentos após o comando /gerar
 
     if len(args) != 5:
-        bot.send_message(chat_id, 'Uso incorreto! O comando deve ser: /gerar quantidade tamanho_usuario tamanho_senha tipo_usuario tipo_senha')
+        bot.send_message(chat_id, 'Uso incorreto! O comando deve ser: /gerar quantidade, tamanho_usuario, tamanho_senha, tipo_usuario, tipo_senha')
         return
     
     try:
