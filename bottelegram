@@ -1,0 +1,82 @@
+import random
+import string
+import telebot
+
+# Substitua "SEU_TOKEN" pelo token real do seu bot
+TOKEN = '6924758966:AAFpqEQ8yemsAc64EuyHWhb53roiZGKjKQA'
+
+bot = telebot.TeleBot(TOKEN)
+
+@bot.message_handler(commands=['gerar'])
+def handle_gerar(message):
+    chat_id = message.chat.id
+    args = message.text.split()[1:]  # Obtém os argumentos após o comando /gerar
+
+    if len(args) != 5:
+        bot.send_message(chat_id, 'Uso incorreto! O comando deve ser: /gerar quantidade tamanho_usuario tamanho_senha tipo_usuario tipo_senha')
+        return
+    
+    try:
+        quantidade = int(args[0])
+        tamanho_usuario = int(args[1])
+        tamanho_senha = int(args[2])
+        tipo_usuario = args[3].lower()
+        tipo_senha = args[4].lower()
+    except ValueError:
+        bot.send_message(chat_id, 'Os argumentos devem ser números inteiros.')
+        return
+    
+    if tipo_usuario not in ['letras', 'numeros', 'ambos'] or tipo_senha not in ['letras', 'numeros', 'ambos']:
+        bot.send_message(chat_id, 'Os tipos de caracteres devem ser "letras", "numeros" ou "ambos".')
+        return
+    
+    if quantidade <= 10:
+        bot.send_message(chat_id, 'A quantidade deve ser maior que 10 para iniciar o processamento.')
+        return
+    
+    bot.send_message(chat_id, '📤 GERANDO')
+    bot.send_message(chat_id, '📁 FILA 1')
+    
+    # Inicializa a barra de progresso
+    progresso = 0
+    mensagem_progresso = '▱' * 20  # Barra de progresso inicial
+    msg = bot.send_message(chat_id, mensagem_progresso)
+    
+    lista = []
+    for _ in range(quantidade):
+        usuario = gerar_string(tamanho_usuario, tipo_usuario)
+        senha = gerar_string(tamanho_senha, tipo_senha)
+        lista.append(f"{usuario}:{senha}")
+        
+        progresso += 1
+        if quantidade > 10 and progresso % (quantidade // 10) == 0:
+            percentagem = (progresso / quantidade) * 100
+            preenchimento = int(percentagem / 5)
+            barra = '▰' * preenchimento + '▱' * (20 - preenchimento)
+            mensagem_progresso = f"{barra} {percentagem:.2f} %"
+            # Altera a cor da barra para verde conforme o progresso aumenta
+            bot.edit_message_text(chat_id=chat_id, message_id=msg.message_id, text=mensagem_progresso,
+                                  parse_mode='HTML')
+    
+    texto = '\n'.join(lista)
+    arquivo = open('usuarios_senhas.txt', 'w')
+    arquivo.write(texto)
+    arquivo.close()
+    
+    with open('usuarios_senhas.txt', 'rb') as arquivo_envio:
+        bot.send_document(chat_id, arquivo_envio)
+
+def gerar_string(tamanho, tipo):
+    caracteres = ''
+    if tipo == 'letras':
+        caracteres = string.ascii_letters
+    elif tipo == 'numeros':
+        caracteres = string.digits
+    elif tipo == 'ambos':
+        caracteres = string.ascii_letters + string.digits
+    
+    return ''.join(random.choice(caracteres) for _ in range(tamanho))
+
+print("Bot iniciado")
+
+bot.polling()
