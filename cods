@@ -20,7 +20,7 @@ def verificar_conexao_rede():
 def obter_key():
     if verificar_conexao_rede():
         # Se estiver conectado à internet, obtém a chave do site
-        url = 'https://raw.githubusercontent.com/livehostne/keyf/main/key'
+        url = 'https://www.example.com/obter_key'
 
         try:
             response = requests.get(url)
@@ -42,9 +42,7 @@ def gerar_usuario(tamanho, tipo):
         caracteres = string.digits
     elif tipo == 'letras':
         caracteres = string.ascii_letters
-    elif tipo == 'nomes':
-        caracteres = string.ascii_lowercase + string.ascii_uppercase
-    elif tipo == 'ambos':
+    else:
         caracteres = string.ascii_letters + string.digits
     
     usuario = ''.join(random.choice(caracteres) for _ in range(tamanho))
@@ -55,7 +53,7 @@ def gerar_senha(tamanho, tipo):
         caracteres = string.digits
     elif tipo == 'letras':
         caracteres = string.ascii_letters
-    elif tipo == 'ambos':
+    else:
         caracteres = string.ascii_letters + string.digits
     
     senha = ''.join(random.choice(caracteres) for _ in range(tamanho))
@@ -86,10 +84,10 @@ if key:
     tamanho_usuario = int(input("Tamanho do usuário (em caracteres): "))
     tamanho_senha = int(input("Tamanho da senha (em caracteres): "))
 
-    tipo_usuario = input("Tipo de caracteres para o usuário (letras/numeros/nomes/ambos): ").lower()
-    while tipo_usuario not in ['letras', 'numeros', 'nomes', 'ambos']:
-        print("Opção inválida! Por favor, digite 'letras', 'numeros', 'nomes' ou 'ambos'.")
-        tipo_usuario = input("Tipo de caracteres para o usuário (letras/numeros/nomes/ambos): ").lower()
+    tipo_usuario = input("Tipo de caracteres para o usuário (letras/numeros/ambos): ").lower()
+    while tipo_usuario not in ['letras', 'numeros', 'ambos']:
+        print("Opção inválida! Por favor, digite 'letras', 'numeros' ou 'ambos'.")
+        tipo_usuario = input("Tipo de caracteres para o usuário (letras/numeros/ambos): ").lower()
 
     tipo_senha = input("Tipo de caracteres para a senha (letras/numeros/ambos): ").lower()
     while tipo_senha not in ['letras', 'numeros', 'ambos']:
