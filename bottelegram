@@ -3,7 +3,7 @@ import string
 import telebot
 
 # Substitua "SEU_TOKEN" pelo token real do seu bot
-TOKEN = '6924758966:AAFpqEQ8yemsAc64EuyHWhb53roiZGKjKQA'
+TOKEN = '6600053438:AAHTYEL3NcSlZXws0WoM0s4yf_yiHBMKzcI'
 
 bot = telebot.TeleBot(TOKEN)
 
