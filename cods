@@ -2,6 +2,7 @@ import random
 import string
 import requests
 import socket
+from tqdm import tqdm
 from colorama import init, Fore
 
 init(autoreset=True)
@@ -61,10 +62,12 @@ def gerar_senha(tamanho, tipo):
 
 def gerar_lista(quantidade, tamanho_usuario, tamanho_senha, tipo_usuario, tipo_senha, diretorio, nome_arquivo):
     lista = []
-    for _ in range(quantidade):
-        usuario = gerar_usuario(tamanho_usuario, tipo_usuario)
-        senha = gerar_senha(tamanho_senha, tipo_senha)
-        lista.append(f"{usuario}:{senha}")
+    with tqdm(total=quantidade, desc="Gerando usuários e senhas", unit="usuário") as pbar:
+        for _ in range(quantidade):
+            usuario = gerar_usuario(tamanho_usuario, tipo_usuario)
+            senha = gerar_senha(tamanho_senha, tipo_senha)
+            lista.append(f"{usuario}:{senha}")
+            pbar.update(1)  # Atualiza a barra de progresso a cada iteração
     
     arquivo_path = diretorio + nome_arquivo
     with open(arquivo_path, 'w') as arquivo:
